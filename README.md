@@ -30,10 +30,10 @@ We split the full dataset into train, test, and validation sets. We tested out a
 ## How to run the project 
 
 
-In order to run the jupyter notebook you must have to install the packages with the following command: 
+In order to run the jupyter notebook you should clone the repository and inside of the main directory, you must have to install the dependencies with the following command: 
 
 ```bash
-pip install -r /path/to/requirements.txt
+pip install -r requirements.txt
 ```
 
 
