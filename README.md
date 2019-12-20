@@ -20,13 +20,20 @@ We defined the variable churn and after that we do some exploratory analysis in 
 
 We split the full dataset into train, test, and validation sets. We tested out a random forest model with default values. Moreover, we evaluated the f1 metric, we do not use tuning parameters because it turns out to be computational expensive. Finally, the model works well in a small dataset, but this does not mean that work well in the full dataset. 
 
+## Project components
+
+[Sparkify.ipynb](https://raw.githubusercontent.com/ricardoues/sparkify-project/master/Sparkify.ipynb): a notebook file containing the analysis.
+
+[mini_sparkify_event_data.json.zip](https://github.com/ricardoues/sparkify-project/blob/master/mini_sparkify_event_data.json.zip?raw=true): training json file.
 
 
+## How to run the project 
 
 
+In order to run the jupyter notebook you must have to install the packages with the following command: 
 
-
-
-
+```bash
+pip install -r /path/to/requirements.txt
+```
 
 
