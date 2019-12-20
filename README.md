@@ -3,8 +3,9 @@
 ## Introduction
 
 This is a project provided by Udacity and the goal of this project is to build a model 
-that predicts the churn of a user based on variables such as gender and information about how the user uses the app. We will show the phases 
-of the project.
+that predicts the churn of a user based on variables such as gender and information about how the user uses the app. We will show the phases of the project. There is an article in medium:
+
+[Medium article](https://medium.com/ricardo-rios/building-big-data-pipelines-with-pyspark-to-detect-churned-users-348849d840f1)
 
 
 ## Loading and cleaning the dataset 
