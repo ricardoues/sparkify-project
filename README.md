@@ -33,7 +33,7 @@ We split the full dataset into train, test, and validation sets. We tested out a
 
 In order to run the jupyter notebook, first of all you have to install Apache Spark, the following web site is a good resource: 
 
-[https://computingforgeeks.com/how-to-install-apache-spark-on-ubuntu-debian/](Installing Apache Spark)
+[Installing Apache Spark](https://computingforgeeks.com/how-to-install-apache-spark-on-ubuntu-debian/)
 
 
 you should clone the repository and inside of the main directory, you must have to install the dependencies with the following command: 
