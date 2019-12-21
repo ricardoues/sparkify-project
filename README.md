@@ -31,7 +31,12 @@ We split the full dataset into train, test, and validation sets. We tested out a
 ## How to run the project 
 
 
-In order to run the jupyter notebook you should clone the repository and inside of the main directory, you must have to install the dependencies with the following command: 
+In order to run the jupyter notebook, first of all you have to install Apache Spark, the following web site is a good resource: 
+
+[https://computingforgeeks.com/how-to-install-apache-spark-on-ubuntu-debian/](Installing Apache Spark)
+
+
+you should clone the repository and inside of the main directory, you must have to install the dependencies with the following command: 
 
 ```bash
 pip install -r requirements.txt
