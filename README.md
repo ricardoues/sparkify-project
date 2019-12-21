@@ -36,7 +36,7 @@ In order to run the jupyter notebook, first of all you have to install Apache Sp
 [Installing Apache Spark](https://computingforgeeks.com/how-to-install-apache-spark-on-ubuntu-debian/)
 
 
-you should clone the repository and inside of the main directory, you must have to install the dependencies with the following command: 
+In addition to that you should clone the repository and inside of the main directory, you must have to install the dependencies with the following command: 
 
 ```bash
 pip install -r requirements.txt
