@@ -13183,6 +13183,13 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">pyspark.mllib.evaluation</span> <span class="k">import</span> <span class="n">MulticlassMetrics</span>
 <span class="kn">from</span> <span class="nn">pyspark.ml.evaluation</span> <span class="k">import</span> <span class="n">MulticlassClassificationEvaluator</span>
 <span class="kn">from</span> <span class="nn">pyspark.ml.classification</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
+
+<span class="c1"># Using Skicit-learn to split data into training and testing sets</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span><span class="c1"># Split the data into training and testing sets</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span> <span class="k">as</span> <span class="n">RandomForestClass</span>
+
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
 </pre></div>
 
     </div>
@@ -13270,7 +13277,7 @@ div#notebook {
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>total 123M
 -rw-r--r-- 1 root root 123M Dec 15  2018 mini_sparkify_event_data.json
--rw-r--r-- 1 root root  57K Dec 23 03:48 Sparkify.ipynb
+-rw-r--r-- 1 root root  70K Dec 24 20:43 Sparkify.ipynb
 -rw-r--r-- 1 root root 4.8K Jul 31 09:13 Sparkify-zh.ipynb
 </pre>
 </div>
@@ -16384,7 +16391,7 @@ only showing top 6 rows
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fb569aa05c0&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7face4f2be48&gt;</pre>
 </div>
 
 </div>
@@ -17763,19 +17770,6 @@ only showing top 6 rows
 <div class="prompt input_prompt">In&nbsp;[110]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">processed_data_pd</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;churn&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[111]:</div>
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">selected_predictors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;median_length&#39;</span><span class="p">,</span> <span class="s1">&#39;Add Friend&#39;</span><span class="p">,</span> <span class="s1">&#39;NextSong&#39;</span><span class="p">,</span> <span class="s1">&#39;free&#39;</span><span class="p">,</span> <span class="s1">&#39;paid&#39;</span><span class="p">,</span> <span class="s1">&#39;x200&#39;</span><span class="p">,</span> <span class="s1">&#39;x307&#39;</span><span class="p">,</span> <span class="s1">&#39;x404&#39;</span>               
 <span class="p">]</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">processed_data_pd</span><span class="p">[</span><span class="n">selected_predictors</span><span class="p">],</span> <span class="n">diag_kind</span> <span class="o">=</span> <span class="s1">&#39;kde&#39;</span><span class="p">,</span>
@@ -17793,13 +17787,13 @@ only showing top 6 rows
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[111]:</div>
+    <div class="prompt output_prompt">Out[110]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;seaborn.axisgrid.PairGrid at 0x7fb5694f21d0&gt;</pre>
+<pre>&lt;seaborn.axisgrid.PairGrid at 0x7face49c1320&gt;</pre>
 </div>
 
 </div>
@@ -17847,7 +17841,7 @@ only showing top 6 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="prompt input_prompt">In&nbsp;[111]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">drop_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Cancel&#39;</span><span class="p">,</span> <span class="s1">&#39;Cancellation Confirmation&#39;</span><span class="p">,</span> <span class="s1">&#39;Login&#39;</span> <span class="p">]</span>
@@ -17863,7 +17857,7 @@ only showing top 6 rows
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The classification problem is imbalanced that is why we will use f1 metric.</p>
+<p>The classification problem is imbalanced that is why we will use stratified sampling in order to balanced the classes.</p>
 
 </div>
 </div>
@@ -17888,7 +17882,7 @@ only showing top 6 rows
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We will user stratified sampling in order to treat the imbalanced classification problem, the following resource was useful:
+<p>We will use stratified sampling in order to treat the imbalanced classification problem, the following resource was useful:
 <a href="https://mapr.com/blog/churn-prediction-pyspark-using-mllib-and-ml-packages/">https://mapr.com/blog/churn-prediction-pyspark-using-mllib-and-ml-packages/</a></p>
 
 </div>
@@ -17896,40 +17890,7 @@ only showing top 6 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[113]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">processed_data</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[113]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>DataFrame[churn: int, gender: string, median_length: double, min_length: double, max_length: double, stddev_length: double, About: bigint, Add Friend: bigint, Add to Playlist: bigint, Downgrade: bigint, Error: bigint, Help: bigint, Home: bigint, Logout: bigint, NextSong: bigint, Roll Advert: bigint, Save Settings: bigint, Settings: bigint, Submit Downgrade: bigint, Submit Upgrade: bigint, Thumbs Down: bigint, Thumbs Up: bigint, Upgrade: bigint, free: bigint, paid: bigint, x200: bigint, x307: bigint, x404: bigint]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[114]:</div>
+<div class="prompt input_prompt">In&nbsp;[112]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">processed_data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;churn&#39;</span><span class="p">)</span> \
@@ -17970,7 +17931,7 @@ only showing top 6 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[115]:</div>
+<div class="prompt input_prompt">In&nbsp;[113]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">processed_data</span> <span class="o">=</span> <span class="n">processed_data</span><span class="o">.</span><span class="n">sampleBy</span><span class="p">(</span><span class="s1">&#39;churn&#39;</span><span class="p">,</span> <span class="n">fractions</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">52</span><span class="o">/</span><span class="mi">225</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
@@ -17983,7 +17944,7 @@ only showing top 6 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[116]:</div>
+<div class="prompt input_prompt">In&nbsp;[114]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">processed_data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;churn&#39;</span><span class="p">)</span> \
@@ -18011,13 +17972,26 @@ only showing top 6 rows
 |churn|Churncount|
 +-----+----------+
 |    1|        52|
-|    0|        43|
+|    0|        38|
 +-----+----------+
 
 </pre>
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[115]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">processed_data_pd</span> <span class="o">=</span> <span class="n">processed_data</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span> <span class="c1"># We will use this pandas dataframe later</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -18032,7 +18006,7 @@ only showing top 6 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[117]:</div>
+<div class="prompt input_prompt">In&nbsp;[116]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="n">processed_data</span><span class="o">.</span><span class="n">columns</span>
@@ -18040,6 +18014,7 @@ only showing top 6 rows
 <span class="n">categoricalColumns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span>
 
 <span class="n">stages</span> <span class="o">=</span> <span class="p">[]</span> 
+
 
 <span class="k">for</span> <span class="n">categoricalCol</span> <span class="ow">in</span> <span class="n">categoricalColumns</span><span class="p">:</span>    
     <span class="n">stringIndexer</span> <span class="o">=</span> <span class="n">StringIndexer</span><span class="p">(</span><span class="n">inputCol</span> <span class="o">=</span> <span class="n">categoricalCol</span><span class="p">,</span> <span class="n">outputCol</span> <span class="o">=</span> <span class="n">categoricalCol</span> <span class="o">+</span> <span class="s1">&#39;Index&#39;</span><span class="p">)</span>
@@ -18054,7 +18029,7 @@ only showing top 6 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[118]:</div>
+<div class="prompt input_prompt">In&nbsp;[117]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">label_stringIdx</span> <span class="o">=</span> <span class="n">StringIndexer</span><span class="p">(</span><span class="n">inputCol</span> <span class="o">=</span> <span class="s1">&#39;churn&#39;</span><span class="p">,</span> <span class="n">outputCol</span> <span class="o">=</span> <span class="s1">&#39;label&#39;</span><span class="p">)</span>
@@ -18068,10 +18043,10 @@ only showing top 6 rows
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[119]:</div>
+<div class="prompt input_prompt">In&nbsp;[118]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">numericCols</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;churn&#39;</span><span class="p">,</span> <span class="s1">&#39;median_length&#39;</span><span class="p">,</span> <span class="s1">&#39;min_length&#39;</span><span class="p">,</span> <span class="s1">&#39;max_length&#39;</span><span class="p">,</span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">numericCols</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;median_length&#39;</span><span class="p">,</span> <span class="s1">&#39;min_length&#39;</span><span class="p">,</span> <span class="s1">&#39;max_length&#39;</span><span class="p">,</span> 
                 <span class="s1">&#39;stddev_length&#39;</span><span class="p">,</span><span class="s1">&#39;About&#39;</span><span class="p">,</span> <span class="s1">&#39;Add Friend&#39;</span><span class="p">,</span><span class="s1">&#39;Add to Playlist&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;Downgrade&#39;</span><span class="p">,</span> <span class="s1">&#39;Error&#39;</span><span class="p">,</span> <span class="s1">&#39;Help&#39;</span><span class="p">,</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span> <span class="s1">&#39;Logout&#39;</span><span class="p">,</span> <span class="s1">&#39;NextSong&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;Roll Advert&#39;</span><span class="p">,</span> <span class="s1">&#39;Save Settings&#39;</span><span class="p">,</span> <span class="s1">&#39;Settings&#39;</span><span class="p">,</span> <span class="s1">&#39;Submit Downgrade&#39;</span><span class="p">,</span>
@@ -18081,26 +18056,6 @@ only showing top 6 rows
 <span class="n">assemblerInputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="o">+</span> <span class="s2">&quot;classVec&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categoricalColumns</span><span class="p">]</span> <span class="o">+</span> <span class="n">numericCols</span>
 <span class="n">assembler</span> <span class="o">=</span> <span class="n">VectorAssembler</span><span class="p">(</span><span class="n">inputCols</span><span class="o">=</span><span class="n">assemblerInputs</span><span class="p">,</span> <span class="n">outputCol</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">)</span>
 <span class="n">stages</span> <span class="o">+=</span> <span class="p">[</span><span class="n">assembler</span><span class="p">]</span>
-
-<span class="n">stages_rf</span> <span class="o">=</span> <span class="n">stages</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">stages_lr</span> <span class="o">=</span> <span class="n">stages</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[120]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
-<span class="n">lr</span> <span class="o">=</span>  <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">maxIter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">regParam</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">elasticNetParam</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">stages_rf</span> <span class="o">+=</span> <span class="p">[</span><span class="n">rf</span><span class="p">]</span>
-<span class="n">stages_lr</span> <span class="o">+=</span> <span class="p">[</span><span class="n">lr</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -18111,7 +18066,88 @@ only showing top 6 rows
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Pipeline">Pipeline<a class="anchor-link" href="#Pipeline">&#182;</a></h3><p>We build the pipelines for random forest and logistic regression as follows:</p>
+<h3 id="Base-line-model">Base line model<a class="anchor-link" href="#Base-line-model">&#182;</a></h3><p>We use a random forest with default values as our base line model in order to make comparison with other models.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[119]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">featuresCol</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="n">stages</span> <span class="o">+=</span> <span class="p">[</span><span class="n">rf</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We will show the parameters of the baseline model, the following resource was useful:</p>
+<p><a href="https://stackoverflow.com/questions/42549200/how-to-get-all-parameters-of-estimator-in-pyspark">https://stackoverflow.com/questions/42549200/how-to-get-all-parameters-of-estimator-in-pyspark</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[120]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">{</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">rf</span><span class="o">.</span><span class="n">extractParamMap</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[120]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;probabilityCol&#39;: &#39;probability&#39;,
+ &#39;rawPredictionCol&#39;: &#39;rawPrediction&#39;,
+ &#39;seed&#39;: 123,
+ &#39;predictionCol&#39;: &#39;prediction&#39;,
+ &#39;labelCol&#39;: &#39;label&#39;,
+ &#39;featuresCol&#39;: &#39;features&#39;,
+ &#39;maxDepth&#39;: 5,
+ &#39;maxBins&#39;: 32,
+ &#39;minInstancesPerNode&#39;: 1,
+ &#39;minInfoGain&#39;: 0.0,
+ &#39;maxMemoryInMB&#39;: 256,
+ &#39;cacheNodeIds&#39;: False,
+ &#39;checkpointInterval&#39;: 10,
+ &#39;impurity&#39;: &#39;gini&#39;,
+ &#39;numTrees&#39;: 20,
+ &#39;featureSubsetStrategy&#39;: &#39;auto&#39;,
+ &#39;subsamplingRate&#39;: 1.0}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Pipeline">Pipeline<a class="anchor-link" href="#Pipeline">&#182;</a></h3><p>We build the pipelines for random forest model as follows.</p>
 
 </div>
 </div>
@@ -18121,8 +18157,7 @@ only showing top 6 rows
 <div class="prompt input_prompt">In&nbsp;[121]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline_rf</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">stages</span><span class="o">=</span><span class="n">stages_rf</span><span class="p">)</span> 
-<span class="n">pipeline_lr</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">stages</span><span class="o">=</span><span class="n">stages_lr</span><span class="p">)</span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">stages</span><span class="o">=</span><span class="n">stages</span><span class="p">)</span> 
 </pre></div>
 
     </div>
@@ -18133,7 +18168,8 @@ only showing top 6 rows
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Train-Test-split">Train Test split<a class="anchor-link" href="#Train-Test-split">&#182;</a></h3>
+<h3 id="Train-Test-split">Train Test split<a class="anchor-link" href="#Train-Test-split">&#182;</a></h3><p>Due to the small size of the data we will use cross validation as a mean of comparison between the models that will be proposed that is why we don't use a validation dataset. The test dataset is used to provide us an unbiased evaluation of the final model.</p>
+
 </div>
 </div>
 </div>
@@ -18153,7 +18189,7 @@ only showing top 6 rows
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Tune-the-model">Tune the model<a class="anchor-link" href="#Tune-the-model">&#182;</a></h3>
+<h3 id="Tune-model">Tune model<a class="anchor-link" href="#Tune-model">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -18162,53 +18198,50 @@ only showing top 6 rows
 <div class="prompt input_prompt">In&nbsp;[123]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipelinemodel_rf</span> <span class="o">=</span> <span class="n">pipeline_rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
-<span class="n">pipelinemodel_lr</span> <span class="o">=</span> <span class="n">pipeline_lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># we fix the parameters of the base line model. </span>
+<span class="c1"># the following web site was a good reference:</span>
+<span class="c1"># https://stackoverflow.com/questions/52740966/how-to-perform-cross-validation-without-using-paramgrid-builder-in-pyspark</span>
+
+<span class="n">paramGrid</span> <span class="o">=</span> <span class="n">ParamGridBuilder</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">probabilityCol</span><span class="p">,[</span><span class="s1">&#39;probability&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">rawPredictionCol</span><span class="p">,[</span><span class="s1">&#39;rawPrediction&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">seed</span><span class="p">,[</span><span class="mi">123</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">predictionCol</span><span class="p">,[</span><span class="s1">&#39;prediction&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">labelCol</span><span class="p">,[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">featuresCol</span><span class="p">,[</span><span class="s1">&#39;features&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">,[</span><span class="mi">5</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxBins</span><span class="p">,[</span><span class="mi">32</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">minInstancesPerNode</span><span class="p">,[</span><span class="mi">1</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">minInfoGain</span><span class="p">,[</span><span class="mf">0.0</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxMemoryInMB</span><span class="p">,[</span><span class="mi">256</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">checkpointInterval</span><span class="p">,[</span><span class="mi">10</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">impurity</span><span class="p">,[</span><span class="s1">&#39;gini&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">numTrees</span><span class="p">,[</span><span class="mi">20</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">featureSubsetStrategy</span><span class="p">,[</span><span class="s1">&#39;auto&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">subsamplingRate</span><span class="p">,[</span><span class="mf">1.0</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+
+<span class="n">crossval</span> <span class="o">=</span> <span class="n">CrossValidator</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span>
+                          <span class="n">estimatorParamMaps</span><span class="o">=</span><span class="n">paramGrid</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">),</span>
+                          <span class="n">numFolds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Evaluating-the-random-forest-model">Evaluating the random forest model<a class="anchor-link" href="#Evaluating-the-random-forest-model">&#182;</a></h3>
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[124]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># accuracy in the training dataset</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipelinemodel_rf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
-<span class="n">evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
-<span class="n">acc</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training Error = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">acc</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cvModel_m1</span> <span class="o">=</span> <span class="n">crossval</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Training Error = 0
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -18218,11 +18251,7 @@ only showing top 6 rows
 <div class="prompt input_prompt">In&nbsp;[125]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># accuracy in the test dataset</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipelinemodel_rf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
-<span class="n">evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
-<span class="n">acc</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Error = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">acc</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cvModel_m1</span><span class="o">.</span><span class="n">avgMetrics</span>
 </pre></div>
 
     </div>
@@ -18235,13 +18264,15 @@ only showing top 6 rows
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+    <div class="prompt output_prompt">Out[125]:</div>
 
 
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Test Error = 0
-</pre>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[0.673611111111111]</pre>
 </div>
+
 </div>
 
 </div>
@@ -18251,7 +18282,16 @@ only showing top 6 rows
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Evaluating-the-logistic-regression-model">Evaluating the logistic regression model<a class="anchor-link" href="#Evaluating-the-logistic-regression-model">&#182;</a></h3>
+<p>Due to we fixed the random forest model (we don't use a grid search) we get the average 
+of the accuracy in three folds of the proposed random forest model.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Evaluating-the-random-forest-model-in-the-training-set">Evaluating the random forest model in the training set<a class="anchor-link" href="#Evaluating-the-random-forest-model-in-the-training-set">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -18261,10 +18301,10 @@ only showing top 6 rows
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># accuracy in the training dataset</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipelinemodel_lr</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cvModel_m1</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
 <span class="n">evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
 <span class="n">acc</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training Error = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">acc</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy in the training dataset = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">acc</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -18281,42 +18321,7 @@ only showing top 6 rows
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Training Error = 0
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[127]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># accuracy in the test dataset</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pipelinemodel_lr</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
-<span class="n">evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
-<span class="n">acc</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Error = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">acc</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Test Error = 0
+<pre>Accuracy in the training dataset = 0.9875
 </pre>
 </div>
 </div>
@@ -18328,7 +18333,810 @@ only showing top 6 rows
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It seems that both models works well but we will prefer random forest because it can handle highly correlated predictors.</p>
+<p>The random forest model classifies works well in the training dataset with an accuracy of 0.96 accuracy but its performace is bad using cross validation with a average of 0.44 in three folds. This is a case of overfitting and because of that we will select the best predictors using feature importance.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Removing-predictors">Removing predictors<a class="anchor-link" href="#Removing-predictors">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We will explore removing some unnecessary predictors using feature importance. The following resource was useful:</p>
+<p><a href="https://www.timlrx.com/2018/06/19/feature-selection-using-feature-importance-score-creating-a-pyspark-estimator/">https://www.timlrx.com/2018/06/19/feature-selection-using-feature-importance-score-creating-a-pyspark-estimator/</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[127]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cvModel_m1</span><span class="o">.</span><span class="n">bestModel</span><span class="o">.</span><span class="n">stages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">featureImportances</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[127]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>SparseVector(27, {0: 0.0038, 1: 0.0648, 2: 0.0275, 3: 0.0198, 4: 0.056, 5: 0.0092, 6: 0.1317, 7: 0.028, 8: 0.0157, 9: 0.026, 10: 0.0397, 11: 0.0579, 12: 0.0484, 13: 0.0161, 14: 0.0314, 15: 0.0286, 16: 0.0438, 17: 0.0041, 18: 0.0126, 19: 0.0645, 20: 0.0855, 21: 0.014, 22: 0.0304, 23: 0.0297, 24: 0.0214, 25: 0.0371, 26: 0.0524})</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The feature importance vector is returned as a sparse vector. This format is not convenient for a human that is why we use the following function.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[128]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">ExtractFeatureImp</span><span class="p">(</span><span class="n">featureImp</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">featuresCol</span><span class="p">):</span>
+    
+    <span class="sd">&quot;&quot;&quot; Returns a list of feature importances from a Random Forest model. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        featureImp (SparseVector): the feature importance.  </span>
+<span class="sd">        dataset (pandas dataframe): the dataset as a pandas dataframe.</span>
+<span class="sd">        featureCol (string): parameter related to the schema of the dataset variable.</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">    Returns: a dataframe with the feature importances from a random forest model</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    
+    
+    <span class="n">list_extract</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">schema</span><span class="p">[</span><span class="n">featuresCol</span><span class="p">]</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;ml_attr&quot;</span><span class="p">][</span><span class="s2">&quot;attrs&quot;</span><span class="p">]:</span>
+        <span class="n">list_extract</span> <span class="o">=</span> <span class="n">list_extract</span> <span class="o">+</span> <span class="n">dataset</span><span class="o">.</span><span class="n">schema</span><span class="p">[</span><span class="n">featuresCol</span><span class="p">]</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;ml_attr&quot;</span><span class="p">][</span><span class="s2">&quot;attrs&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">varlist</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">list_extract</span><span class="p">)</span>
+    <span class="n">varlist</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">varlist</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">featureImp</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">varlist</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[129]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline_model</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[130]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pipeline_model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[131]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ExtractFeatureImp</span><span class="p">(</span><span class="n">cvModel_m1</span><span class="o">.</span><span class="n">bestModel</span><span class="o">.</span><span class="n">stages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">featureImportances</span><span class="p">,</span> \
+                  <span class="n">df</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[131]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>idx</th>
+      <th>name</th>
+      <th>score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>Add Friend</td>
+      <td>0.131654</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>20</td>
+      <td>Thumbs Up</td>
+      <td>0.085466</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>median_length</td>
+      <td>0.064822</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>19</td>
+      <td>Thumbs Down</td>
+      <td>0.064451</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>11</td>
+      <td>Home</td>
+      <td>0.057941</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>stddev_length</td>
+      <td>0.056029</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>26</td>
+      <td>x404</td>
+      <td>0.052378</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>12</td>
+      <td>Logout</td>
+      <td>0.048363</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>16</td>
+      <td>Settings</td>
+      <td>0.043823</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>Help</td>
+      <td>0.039687</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>25</td>
+      <td>x307</td>
+      <td>0.037116</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>14</td>
+      <td>Roll Advert</td>
+      <td>0.031369</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>22</td>
+      <td>free</td>
+      <td>0.030418</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>23</td>
+      <td>paid</td>
+      <td>0.029656</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>15</td>
+      <td>Save Settings</td>
+      <td>0.028649</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>Add to Playlist</td>
+      <td>0.028001</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>min_length</td>
+      <td>0.027491</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>Error</td>
+      <td>0.026016</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>24</td>
+      <td>x200</td>
+      <td>0.021401</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>max_length</td>
+      <td>0.019793</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>13</td>
+      <td>NextSong</td>
+      <td>0.016102</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>Downgrade</td>
+      <td>0.015675</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>21</td>
+      <td>Upgrade</td>
+      <td>0.014005</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>18</td>
+      <td>Submit Upgrade</td>
+      <td>0.012631</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>About</td>
+      <td>0.009174</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>17</td>
+      <td>Submit Downgrade</td>
+      <td>0.004093</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>0</td>
+      <td>genderclassVec_M</td>
+      <td>0.003795</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We will exclude variables with a value of importance below to 0.03, which are: About, Help, Upgrade, Home, gender, Thumbs Up, x200, Error, Submit Upgrade, x404, and Submit Downgrade. Next, we will recreate the random forest model without these predictors.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[132]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stages</span> <span class="o">=</span> <span class="p">[]</span> 
+
+
+<span class="n">label_stringIdx</span> <span class="o">=</span> <span class="n">StringIndexer</span><span class="p">(</span><span class="n">inputCol</span> <span class="o">=</span> <span class="s1">&#39;churn&#39;</span><span class="p">,</span> <span class="n">outputCol</span> <span class="o">=</span> <span class="s1">&#39;label&#39;</span><span class="p">)</span>
+<span class="n">stages</span> <span class="o">+=</span> <span class="p">[</span><span class="n">label_stringIdx</span><span class="p">]</span>
+
+<span class="n">numericCols</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;median_length&#39;</span><span class="p">,</span> <span class="s1">&#39;min_length&#39;</span><span class="p">,</span> <span class="s1">&#39;max_length&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;stddev_length&#39;</span><span class="p">,</span> <span class="s1">&#39;Add Friend&#39;</span><span class="p">,</span><span class="s1">&#39;Add to Playlist&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Downgrade&#39;</span><span class="p">,</span> <span class="s1">&#39;Logout&#39;</span><span class="p">,</span> <span class="s1">&#39;NextSong&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Roll Advert&#39;</span><span class="p">,</span> <span class="s1">&#39;Save Settings&#39;</span><span class="p">,</span> <span class="s1">&#39;Settings&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Thumbs Down&#39;</span><span class="p">,</span><span class="s1">&#39;free&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;paid&#39;</span><span class="p">,</span><span class="s1">&#39;x307&#39;</span><span class="p">]</span>
+
+
+
+<span class="n">assemblerInputs</span> <span class="o">=</span> <span class="n">numericCols</span>
+<span class="n">assembler</span> <span class="o">=</span> <span class="n">VectorAssembler</span><span class="p">(</span><span class="n">inputCols</span><span class="o">=</span><span class="n">assemblerInputs</span><span class="p">,</span> <span class="n">outputCol</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">)</span>
+<span class="n">stages</span> <span class="o">+=</span> <span class="p">[</span><span class="n">assembler</span><span class="p">]</span>
+
+
+<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">featuresCol</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="n">stages</span> <span class="o">+=</span> <span class="p">[</span><span class="n">rf</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[133]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">stages</span><span class="o">=</span><span class="n">stages</span><span class="p">)</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[134]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># we fix the parameters of the base line model. </span>
+<span class="c1"># the following web site was a good reference:</span>
+<span class="c1"># https://stackoverflow.com/questions/52740966/how-to-perform-cross-validation-without-using-paramgrid-builder-in-pyspark</span>
+
+<span class="n">paramGrid</span> <span class="o">=</span> <span class="n">ParamGridBuilder</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">probabilityCol</span><span class="p">,[</span><span class="s1">&#39;probability&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">rawPredictionCol</span><span class="p">,[</span><span class="s1">&#39;rawPrediction&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">seed</span><span class="p">,[</span><span class="mi">123</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">predictionCol</span><span class="p">,[</span><span class="s1">&#39;prediction&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">labelCol</span><span class="p">,[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">featuresCol</span><span class="p">,[</span><span class="s1">&#39;features&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">,[</span><span class="mi">5</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxBins</span><span class="p">,[</span><span class="mi">32</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">minInstancesPerNode</span><span class="p">,[</span><span class="mi">1</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">minInfoGain</span><span class="p">,[</span><span class="mf">0.0</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxMemoryInMB</span><span class="p">,[</span><span class="mi">256</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">checkpointInterval</span><span class="p">,[</span><span class="mi">10</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">impurity</span><span class="p">,[</span><span class="s1">&#39;gini&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">numTrees</span><span class="p">,[</span><span class="mi">20</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">featureSubsetStrategy</span><span class="p">,[</span><span class="s1">&#39;auto&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">subsamplingRate</span><span class="p">,[</span><span class="mf">1.0</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+
+<span class="n">crossval</span> <span class="o">=</span> <span class="n">CrossValidator</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span>
+                          <span class="n">estimatorParamMaps</span><span class="o">=</span><span class="n">paramGrid</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">),</span>
+                          <span class="n">numFolds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[135]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cvModel_m2</span> <span class="o">=</span> <span class="n">crossval</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[136]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cvModel_m2</span><span class="o">.</span><span class="n">avgMetrics</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[136]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[0.5844907407407408]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Evaluating-the-random-forest-model-in-the-training-dataset">Evaluating the random forest model in the training dataset<a class="anchor-link" href="#Evaluating-the-random-forest-model-in-the-training-dataset">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[137]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># accuracy in the training dataset</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cvModel_m2</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+<span class="n">evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy in the training dataset = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">acc</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy in the training dataset = 0.9875
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This model also exhibits overfitting.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Varying-the-maxDepth-in-order-to-treat-overfitting">Varying the maxDepth in order to treat overfitting<a class="anchor-link" href="#Varying-the-maxDepth-in-order-to-treat-overfitting">&#182;</a></h2><p>The maxDepth controls the complexity of a random forest model, since that our previous random forest model still exhibits overfitting we will vary the maxDepth from 1 to 5.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[138]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># we fix the parameters of the base line model. </span>
+<span class="c1"># the following web site was a good reference:</span>
+<span class="c1"># https://stackoverflow.com/questions/52740966/how-to-perform-cross-validation-without-using-paramgrid-builder-in-pyspark</span>
+
+<span class="n">paramGrid</span> <span class="o">=</span> <span class="n">ParamGridBuilder</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">probabilityCol</span><span class="p">,[</span><span class="s1">&#39;probability&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">rawPredictionCol</span><span class="p">,[</span><span class="s1">&#39;rawPrediction&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">seed</span><span class="p">,[</span><span class="mi">123</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">predictionCol</span><span class="p">,[</span><span class="s1">&#39;prediction&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">labelCol</span><span class="p">,[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">featuresCol</span><span class="p">,[</span><span class="s1">&#39;features&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxBins</span><span class="p">,[</span><span class="mi">32</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">minInstancesPerNode</span><span class="p">,[</span><span class="mi">1</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">minInfoGain</span><span class="p">,[</span><span class="mf">0.0</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">maxMemoryInMB</span><span class="p">,[</span><span class="mi">256</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">checkpointInterval</span><span class="p">,[</span><span class="mi">10</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">impurity</span><span class="p">,[</span><span class="s1">&#39;gini&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">numTrees</span><span class="p">,[</span><span class="mi">20</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">featureSubsetStrategy</span><span class="p">,[</span><span class="s1">&#39;auto&#39;</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">addGrid</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">subsamplingRate</span><span class="p">,[</span><span class="mf">1.0</span><span class="p">])</span> \
+    <span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+
+<span class="n">crossval</span> <span class="o">=</span> <span class="n">CrossValidator</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span>
+                          <span class="n">estimatorParamMaps</span><span class="o">=</span><span class="n">paramGrid</span><span class="p">,</span>
+                          <span class="n">evaluator</span><span class="o">=</span><span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">),</span>
+                          <span class="n">numFolds</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[139]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cvModel_m3</span> <span class="o">=</span> <span class="n">crossval</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[140]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cvModel_m3</span><span class="o">.</span><span class="n">avgMetrics</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[140]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[0.652281746031746,
+ 0.5650903880070547,
+ 0.5492173721340389,
+ 0.5461860670194004,
+ 0.5844907407407408]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We will get the parameters of the best model using the previous grid:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[144]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># good reference </span>
+<span class="c1"># https://forums.databricks.com/questions/12097/pyspark-how-to-get-best-params-in-grid-search.html</span>
+
+<span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cvModel_m3</span><span class="o">.</span><span class="n">avgMetrics</span><span class="p">,</span> <span class="n">paramGrid</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[144]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(0.652281746031746,
+ {Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;probabilityCol&#39;, doc=&#39;Column name for predicted class conditional probabilities. Note: Not all models output well-calibrated probability estimates! These probabilities should be treated as confidences, not precise probabilities.&#39;): &#39;probability&#39;,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;rawPredictionCol&#39;, doc=&#39;raw prediction (a.k.a. confidence) column name.&#39;): &#39;rawPrediction&#39;,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;seed&#39;, doc=&#39;random seed.&#39;): 123,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;predictionCol&#39;, doc=&#39;prediction column name.&#39;): &#39;prediction&#39;,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;labelCol&#39;, doc=&#39;label column name.&#39;): &#39;label&#39;,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;featuresCol&#39;, doc=&#39;features column name.&#39;): &#39;features&#39;,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;maxDepth&#39;, doc=&#39;Maximum depth of the tree. (&gt;= 0) E.g., depth 0 means 1 leaf node; depth 1 means 1 internal node + 2 leaf nodes.&#39;): 1,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;maxBins&#39;, doc=&#39;Max number of bins for discretizing continuous features.  Must be &gt;=2 and &gt;= number of categories for any categorical feature.&#39;): 32,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;minInstancesPerNode&#39;, doc=&#39;Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid. Should be &gt;= 1.&#39;): 1,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;minInfoGain&#39;, doc=&#39;Minimum information gain for a split to be considered at a tree node.&#39;): 0.0,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;maxMemoryInMB&#39;, doc=&#39;Maximum memory in MB allocated to histogram aggregation. If too small, then 1 node will be split per iteration, and its aggregates may exceed this size.&#39;): 256,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;checkpointInterval&#39;, doc=&#39;set checkpoint interval (&gt;= 1) or disable checkpoint (-1). E.g. 10 means that the cache will get checkpointed every 10 iterations. Note: this setting will be ignored if the checkpoint directory is not set in the SparkContext.&#39;): 10,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;impurity&#39;, doc=&#39;Criterion used for information gain calculation (case-insensitive). Supported options: entropy, gini&#39;): &#39;gini&#39;,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;numTrees&#39;, doc=&#39;Number of trees to train (&gt;= 1).&#39;): 20,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;featureSubsetStrategy&#39;, doc=&#34;The number of features to consider for splits at each tree node. Supported options: &#39;auto&#39; (choose automatically for task: If numTrees == 1, set to &#39;all&#39;. If numTrees &gt; 1 (forest), set to &#39;sqrt&#39; for classification and to &#39;onethird&#39; for regression), &#39;all&#39; (use all features), &#39;onethird&#39; (use 1/3 of the features), &#39;sqrt&#39; (use sqrt(number of features)), &#39;log2&#39; (use log2(number of features)), &#39;n&#39; (when n is in the range (0, 1.0], use n * number of features. When n is in the range (1, number of features), use n features). default = &#39;auto&#39;&#34;): &#39;auto&#39;,
+  Param(parent=&#39;RandomForestClassifier_663c9d5efb36&#39;, name=&#39;subsamplingRate&#39;, doc=&#39;Fraction of the training data used for learning each decision tree, in range (0, 1].&#39;): 1.0})</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>With a maxDepth equal to 1, we get an average of 0.65 in the tree folds.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Evaluating-the-random-forest-model-in-the-training-dataset">Evaluating the random forest model in the training dataset<a class="anchor-link" href="#Evaluating-the-random-forest-model-in-the-training-dataset">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[142]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># accuracy in the training dataset</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cvModel_m3</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+<span class="n">evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy in the training dataset = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">acc</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy in the training dataset = 0.7375
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Evaluating-the-random-forest-model-in-the-test-dataset">Evaluating the random forest model in the test dataset<a class="anchor-link" href="#Evaluating-the-random-forest-model-in-the-test-dataset">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[143]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># accuracy in the training dataset</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cvModel_m3</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+<span class="n">evaluator</span> <span class="o">=</span> <span class="n">MulticlassClassificationEvaluator</span><span class="p">(</span><span class="n">labelCol</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">predictionCol</span><span class="o">=</span><span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">metricName</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy in the test dataset = </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">acc</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy in the test dataset = 0.6
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We choose as the best model the model with a maxDepth equals to 1 that uses a reduced set of predictors. In spite of the first model that has an accuracy of 0.67 which is greater than the model with a maxDepth equals to 1, it is preferable the model with a maxDepth equals to 1 due to the following reasons:</p>
+<ul>
+<li>It has fewer parameters and because of that it is less prone to overfitting.</li>
+<li>The accuracy in the training data set is similar to the average of accuracies in the tree folds and because of that this model does not suffer from severe overfitting.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Conclusions">Conclusions<a class="anchor-link" href="#Conclusions">&#182;</a></h1><ul>
+<li>The best model has an accuracy of 0.55 little better than 0.5. </li>
+<li>Due to computational limitations we do not add more parameters to the grid in the CrossValidator.</li>
+<li>It is possible to improve the model using a more sophisticated model such as gradient boosting or deep learning.</li>
+<li>Using more data we can estimate a more accurate model and it is possible to get a better performance.</li>
+</ul>
 
 </div>
 </div>
