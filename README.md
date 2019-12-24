@@ -25,6 +25,9 @@ We split the full dataset into train, test, and validation sets. We tested out a
 
 [Sparkify.ipynb](https://raw.githubusercontent.com/ricardoues/sparkify-project/master/Sparkify.ipynb): a notebook file containing the analysis.
 
+[Sparkify.ipynb](https://raw.githubusercontent.com/ricardoues/sparkify-project/master/Sparkify.html): a html file containing the analysis.
+
+
 [mini_sparkify_event_data.json.zip](https://github.com/ricardoues/sparkify-project/blob/master/mini_sparkify_event_data.json.zip?raw=true): training json file.
 
 
