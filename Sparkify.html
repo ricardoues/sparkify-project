@@ -18333,7 +18333,7 @@ of the accuracy in three folds of the proposed random forest model.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The random forest model classifies works well in the training dataset with an accuracy of 0.96 accuracy but its performace is bad using cross validation with a average of 0.44 in three folds. This is a case of overfitting and because of that we will select the best predictors using feature importance.</p>
+<p>The random forest model works well in the training dataset with an accuracy of 0.98 accuracy but its performace is of 0.67 (average) in three folds. This is a case of overfitting and because of that we will select the best predictors using feature importance.</p>
 
 </div>
 </div>
@@ -18861,7 +18861,7 @@ of the accuracy in three folds of the proposed random forest model.</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This model also exhibits overfitting.</p>
+<p>This model also exhibits overfitting 0.98 of accuracy in the training and 0.58 of accuracy in the cross validation set.</p>
 
 </div>
 </div>
@@ -19124,6 +19124,7 @@ of the accuracy in three folds of the proposed random forest model.</p>
 <li>It has fewer parameters and because of that it is less prone to overfitting.</li>
 <li>The accuracy in the training data set is similar to the average of accuracies in the tree folds and because of that this model does not suffer from severe overfitting.</li>
 </ul>
+<p><strong>Note</strong>: There are some problems of reproducibility with the results, I tried to be careful setting every random seed but the results change with each execution, is it possible that the reason for that is the distribuded behaviour of Apache Spark?</p>
 
 </div>
 </div>
@@ -19135,7 +19136,7 @@ of the accuracy in three folds of the proposed random forest model.</p>
 <li>The best model has an accuracy of 0.55 little better than 0.5. </li>
 <li>Due to computational limitations we do not add more parameters to the grid in the CrossValidator.</li>
 <li>It is possible to improve the model using a more sophisticated model such as gradient boosting or deep learning.</li>
-<li>Using more data we can estimate a more accurate model and it is possible to get a better performance.</li>
+<li>If we get more data we can estimate a more accurate model and it is possible to get a better performance.</li>
 </ul>
 
 </div>
